@@ -33,6 +33,7 @@ export function isPlainObject(obj: unknown): obj is PlainObject {
 }
 
 /**
+ * 从一个对象中获取特定的属性
  * pick object
  * @param {Object} obj
  * @param {Array|String} props
@@ -52,6 +53,24 @@ export function pick<T extends PlainObject, K extends keyof T>(obj: T, props: K 
 }
 
 /**
+ * Example：
+ *  const target = {
+ *    weeks: ['星期一'],
+ *    months: ['一月'],
+ *    config: {
+ *      yearFormat: 'YYYY年',
+ *      monthFormat: 'MMM',
+ *    }
+ *  }
+ *  const source = {
+ *    weeks: ['星期1'],
+ *    months: ['1月'],
+ *    config: {
+ *      yearFormat: 'yyyy',
+ *      monthFormat: 'mmm',
+ *    }
+ *  }
+ * 深度合并两个对象，而不合并数组
  * deep merge two object without merging array
  * @param {object} target
  * @param {object} source

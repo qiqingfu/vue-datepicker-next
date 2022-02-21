@@ -9,7 +9,7 @@
         placeholder="Select date"
       ></date-picker>
     </section>
-    <section>
+    <!-- <section>
       <p>month</p>
       <date-picker v-model:value="value2" type="month" placeholder="Select month"></date-picker>
     </section>
@@ -32,7 +32,7 @@
     <section>
       <p>week</p>
       <date-picker v-model:value="value6" type="week" placeholder="Select week"></date-picker>
-    </section>
+    </section> -->
   </div>
 </template>
 

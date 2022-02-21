@@ -13,7 +13,7 @@ export default defineComponent({
   setup() {
     const activeCardId = ref(getCurrentId());
     const activeTitleId = ref('');
-    const lang = ref('en');
+    const lang = ref('zh');
 
     const list = computed(() => (lang.value === 'en' ? listEn : listZh));
 

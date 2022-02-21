@@ -34,6 +34,9 @@ export interface PickerBaseProps {
   ['onUpdate:value']?: (v: any) => void;
 }
 
+/**
+ * 交叉类型，Picker 组件的 props 类型
+ */
 export type PickerProps = PickerBaseProps & PickerInputBaseProps;
 
 export interface SlotProps {
@@ -42,7 +45,13 @@ export interface SlotProps {
   emit: (value: any, type?: string, close?: boolean) => void;
 }
 
+/**
+ * 函数组件 Picker
+ */
 function Picker(originalProps: PickerProps, { slots }: SetupContext) {
+  /**
+   * originalProps 的属性为 undefined 时，则获取第二个参数对象属性的值
+   */
   const props = withDefault(originalProps, {
     prefixClass: 'mx',
     valueType: 'date',
@@ -57,16 +66,28 @@ function Picker(originalProps: PickerProps, { slots }: SetupContext) {
   provideGetWeek(props.formatter?.getWeek || getWeek);
   const locale = provideLocale(toRef(originalProps, 'lang'));
 
+  /**
+   * 用于直接引用DOM节点
+   */
   const container = ref<HTMLDivElement>();
 
   const getContainer = () => container.value;
 
+  /**
+   * 默认打开
+   */
   const defaultOpen = ref(false);
 
+  /**
+   * 当组件禁用，props open 弹出层不可用
+   */
   const popupVisible = computed(() => {
     return !props.disabled && (typeof props.open === 'boolean' ? props.open : defaultOpen.value);
   });
 
+  /**
+   * 控制窗口的打开与关闭
+   */
   const openPopup = () => {
     if (props.disabled || popupVisible.value) return;
     defaultOpen.value = true;
@@ -98,6 +119,9 @@ function Picker(originalProps: PickerProps, { slots }: SetupContext) {
     return parse(value, fmt, { locale: locale.value.formatLocale, backupDate });
   };
 
+  /**
+   * new Date(NaN) Invalid Date
+   */
   const value2date = (value: unknown) => {
     switch (props.valueType) {
       case 'date':
@@ -125,11 +149,22 @@ function Picker(originalProps: PickerProps, { slots }: SetupContext) {
     }
   };
 
+  /**
+   * 有可能出现无效日期的情况
+   */
   const innerValue = computed(() => {
     const value = props.value;
+    /**
+     * range： 日期范围选择
+     * value 理应是一个数组类型，包含初始化的开始和结束日期
+     * 若 value 不是数组日期，value2date 根据 valueType 计算默认值
+     */
     if (props.range) {
       return (Array.isArray(value) ? value.slice(0, 2) : [null, null]).map(value2date);
     }
+    /**
+     * multiple：可以选择多个日期，以逗号分隔
+     */
     if (props.multiple) {
       return (Array.isArray(value) ? value : []).map(value2date);
     }
@@ -148,6 +183,7 @@ function Picker(originalProps: PickerProps, { slots }: SetupContext) {
 
   // cache
   const currentValue = ref<Date | Date[]>(new Date());
+  // TODO
   watchEffect(() => {
     if (popupVisible.value) {
       currentValue.value = innerValue.value;

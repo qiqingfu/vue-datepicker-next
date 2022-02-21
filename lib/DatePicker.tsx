@@ -19,6 +19,13 @@ type DatePickerRangeProps = {
 
 export type DatePickerComponentProps = DatePickerProps | DatePickerRangeProps;
 
+/**
+ * + 修饰符，为映射属性添加 ? 修饰符或 readonly 修饰符
+ * - 修饰符，为映射属性移除 ? 修饰符或 readonly 修饰符
+ * type Required<T> = { [P in keyof T]-?: T[P]; }
+ *
+ * PickByValueExact： https://github.com/piotrwitek/utility-types#pickbyvalueexactt-valuetype
+ */
 const booleanKeys = keys<PickByValueExact<Required<DatePickerComponentProps>, boolean>>()([
   'range',
   'open',

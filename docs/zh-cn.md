@@ -6,7 +6,7 @@
 './demo/Basic.vue'
 ```
 
-### 绑定值的类型
+<!-- ### 绑定值的类型
 
 通过`valueType`去设置`ｖ-model`绑定的值的类型
 
@@ -102,4 +102,4 @@
 
 ```demo
 './demo/ControlOpen.vue'
-```
+``` -->

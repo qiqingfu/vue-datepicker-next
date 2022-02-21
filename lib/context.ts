@@ -25,6 +25,10 @@ export function provideLocale(lang: Ref<string | DeepPartial<Locale> | undefined
   return locale;
 }
 
+/**
+ * 这里将 provide 和 inject 封装在同一个模块中
+ * 好处是，可以共用同一个 prefixClassKey 值，无须导出
+ */
 export function providePrefixClass(value?: string) {
   provide(prefixClassKey, value);
 }
@@ -32,9 +36,17 @@ export function usePrefixClass() {
   return inject(prefixClassKey, 'mx');
 }
 
+/**
+ * 在父组件调用 provideGetWeek
+ * 提供格式化程序
+ */
 export function provideGetWeek(value?: typeof getWeek) {
   provide(getWeekKey, value);
 }
+/**
+ * 在任何子组件都通过 useGetWeek 获取，更便捷的值内层传递
+ * 使用格式化程序
+ */
 export function useGetWeek() {
   return inject(getWeekKey, getWeek);
 }
