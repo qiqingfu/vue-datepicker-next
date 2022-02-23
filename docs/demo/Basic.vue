@@ -6,7 +6,10 @@
         v-model:value="value1"
         format="YYYY-MM-DD"
         type="date"
+        range
+        separator="-"
         placeholder="Select date"
+        :on-input-error="onInputError"
       ></date-picker>
     </section>
     <!-- <section>
@@ -48,6 +51,14 @@ export default {
       value5: null,
       value6: null,
     };
+  },
+  methods: {
+    focusHandle() {
+      console.log('focus');
+    },
+    onInputError(error) {
+      console.log('error =>', error);
+    },
   },
 };
 </script>

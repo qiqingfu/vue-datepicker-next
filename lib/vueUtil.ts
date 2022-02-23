@@ -16,6 +16,10 @@ export function defineVueComponent<Props, PropsKeys extends (keyof Props)[], Raw
   return { setup, name: setup.name, props } as any;
 }
 
+/**
+ * 对 props 对象进行代理，props 的属性值为 undefined 时
+ * 返回 defaultProps 对应默认值
+ */
 export function withDefault<Props extends Record<string, any>, DefaultProps extends Partial<Props>>(
   props: Props,
   defaultProps: DefaultProps

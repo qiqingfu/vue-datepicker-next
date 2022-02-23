@@ -44,6 +44,9 @@ function PickerInput(originalProps: PickerInputProps, { slots }: SetupContext) {
 
   const userInput = ref<string | null>(null);
 
+  /**
+   * 分隔符，可自定义设置。未指定时根据 props range 设置
+   */
   const innerSeparator = computed(() => {
     return props.separator || (props.range ? ' ~ ' : ',');
   });
@@ -58,10 +61,20 @@ function PickerInput(originalProps: PickerInputProps, { slots }: SetupContext) {
     return isValidDate(value) && !props.disabledDate(value);
   };
 
+  /**
+   * 这里的计算属性应用有点奇怪，像 watch 侦听器函数的使用场景
+   * 观察 userInput 值的变化，存在值时直接返回
+   * 在代码中 handleChanghe 函数，每次 Input 值改变，手动设置 userInput 为 null，刻意执行
+   * computed 中其他计算代码执行，计算最新的 text 值
+   */
   const text = computed(() => {
     if (userInput.value !== null) {
       return userInput.value;
     }
+    /**
+     * Picker 组件支持 props.renderInputText，日期每次改变，用户可以自定义
+     * 日期在 PickerInput 中显示的内容
+     */
     if (typeof props.renderInputText === 'function') {
       return props.renderInputText(props.value);
     }
@@ -82,7 +95,15 @@ function PickerInput(originalProps: PickerInputProps, { slots }: SetupContext) {
     props.onClear?.();
   };
 
+  /**
+   * 输入 Enter 时触发
+   */
   const handleChange = () => {
+    /**
+     * Enter 回车触发的条件是：
+     *  1. 输入框不可以编辑
+     *  2. 输入框的内容发生变化
+     */
     if (!props.editable || userInput.value === null) return;
     const text = userInput.value.trim();
     userInput.value = null;
@@ -91,6 +112,9 @@ function PickerInput(originalProps: PickerInputProps, { slots }: SetupContext) {
       return;
     }
     let date: Date | Date[];
+    /**
+     * 日期范围选择
+     */
     if (props.range) {
       let arr = text.split(innerSeparator.value);
       if (arr.length !== 2) {
@@ -111,23 +135,31 @@ function PickerInput(originalProps: PickerInputProps, { slots }: SetupContext) {
     }
   };
 
+  /**
+   *  Input 的事件对象什么情况下会为 string 类型?
+   */
   const handleInput = (evt: string | Event) => {
     userInput.value = typeof evt === 'string' ? evt : (evt.target as HTMLInputElement).value;
   };
 
   const handleKeydown = (evt: KeyboardEvent) => {
-    const { keyCode } = evt;
-    // Tab 9 or Enter 13
-    if (keyCode === 9) {
+    const { key } = evt;
+    if (key === 'Tab') {
       props.onBlur();
-    } else if (keyCode === 13) {
+    } else if (key === 'Enter') {
       handleChange();
     }
   };
 
   return () => {
+    /**
+     * 显示清除按钮的情况
+     */
     const showClearIcon = !props.disabled && props.clearable && text.value;
 
+    /**
+     * 存在自定义的 input 插槽时，inputProps 对象暴露给作用域插槽
+     */
     const inputProps = {
       name: 'date',
       type: 'text',

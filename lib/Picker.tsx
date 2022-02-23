@@ -92,6 +92,9 @@ function Picker(originalProps: PickerProps, { slots }: SetupContext) {
     if (props.disabled || popupVisible.value) return;
     defaultOpen.value = true;
     props['onUpdate:open']?.(true);
+    /**
+     * 自定义事件 focus 未实现
+     */
     props.onOpen?.();
   };
 
@@ -110,6 +113,10 @@ function Picker(originalProps: PickerProps, { slots }: SetupContext) {
     return format(date, fmt, { locale: locale.value.formatLocale });
   };
 
+  /**
+   *  解析日期
+   *  PickerInput 组件中解析日期操作放在了 Picker 进行
+   */
   const parseDate = (value: string, fmt?: string): Date => {
     fmt = fmt || props.format;
     if (isPlainObject(props.formatter) && typeof props.formatter.parse === 'function') {
@@ -171,6 +178,9 @@ function Picker(originalProps: PickerProps, { slots }: SetupContext) {
     return value2date(value);
   });
 
+  /**
+   * 双向绑定，将最新的日期同步给 value
+   */
   const emitValue = (date: Date | Date[] | null | null[], type?: string, close = true) => {
     const value = Array.isArray(date) ? date.map(date2value) : date2value(date);
     props['onUpdate:value']?.(value);
@@ -183,7 +193,6 @@ function Picker(originalProps: PickerProps, { slots }: SetupContext) {
 
   // cache
   const currentValue = ref<Date | Date[]>(new Date());
-  // TODO
   watchEffect(() => {
     if (popupVisible.value) {
       currentValue.value = innerValue.value;
@@ -236,6 +245,9 @@ function Picker(originalProps: PickerProps, { slots }: SetupContext) {
   return () => {
     const { prefixClass, disabled, confirm, range, popupClass, popupStyle, appendToBody } = props;
 
+    /**
+     * Picker 组件中作用域插槽暴露给父组件的数据
+     */
     const slotProps = {
       value: currentValue.value,
       ['onUpdate:value']: handleSelect,
@@ -284,6 +296,9 @@ function Picker(originalProps: PickerProps, { slots }: SetupContext) {
           onClick={openPopup}
           onFocus={openPopup}
           onBlur={closePopup}
+          /**
+           * v-slots 传递一个对象
+           */
           v-slots={pick(slots, ['icon-calendar', 'icon-clear', 'input'])}
         />
         <Popup
