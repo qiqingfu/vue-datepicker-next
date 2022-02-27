@@ -208,6 +208,9 @@ function Picker(originalProps: PickerProps, { slots }: SetupContext) {
     }
   };
 
+  /**
+   * 选择日期时间后，确认处理函数
+   */
   const handleConfirm = () => {
     const value = emitValue(currentValue.value);
     props.onConfirm?.(value);
@@ -222,6 +225,7 @@ function Picker(originalProps: PickerProps, { slots }: SetupContext) {
     return (
       <div class={`${prefixClass}-datepicker-sidebar`}>
         {slots.sidebar?.(slotProps)}
+        {/* shortcuts 配置项，扩展支持外部自定义的时间, 传递到 Picker 内部处理 */}
         {(props.shortcuts || []).map((v, i) => (
           <button
             key={i}
@@ -247,6 +251,7 @@ function Picker(originalProps: PickerProps, { slots }: SetupContext) {
 
     /**
      * Picker 组件中作用域插槽暴露给父组件的数据
+     * emit 函数由用户自定义插槽时，在外部自行调用
      */
     const slotProps = {
       value: currentValue.value,
@@ -254,10 +259,16 @@ function Picker(originalProps: PickerProps, { slots }: SetupContext) {
       emit: emitValue,
     };
 
+    /**
+     * slots.header 获取 header 命名插槽
+     */
     const header = slots.header && (
       <div class={`${prefixClass}-datepicker-header`}>{slots.header(slotProps)}</div>
     );
 
+    /**
+     * confirm 选择日期后是否需要确认
+     */
     const footer = (slots.footer || confirm) && (
       <div class={`${prefixClass}-datepicker-footer`}>
         {slots.footer?.(slotProps)}
@@ -275,6 +286,9 @@ function Picker(originalProps: PickerProps, { slots }: SetupContext) {
 
     const content = slots.content?.(slotProps);
 
+    /**
+     * 自定义的 siderbar，或使用 shortcuts 快捷选项配置
+     */
     const sidedar = (slots.sidebar || props.shortcuts) && renderSidebar(slotProps);
 
     return (
@@ -301,6 +315,7 @@ function Picker(originalProps: PickerProps, { slots }: SetupContext) {
            */
           v-slots={pick(slots, ['icon-calendar', 'icon-clear', 'input'])}
         />
+        {/* 弹出窗口与Input为同级兄弟元素 */}
         <Popup
           className={popupClass}
           style={popupStyle}

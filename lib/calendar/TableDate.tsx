@@ -7,7 +7,7 @@ import { TableHeader, TableHeaderProps } from './TableHeader';
 
 export interface TableDateProps extends Omit<TableHeaderProps, 'type'> {
   showWeekNumber?: boolean;
-  isWeekMode: boolean;
+  isWeekMode: boolean; // 是否显示星期数字
   titleFormat: string;
   getWeekActive: (value: Date[]) => boolean;
   getCellClasses: (value: Date) => string[] | string;
@@ -31,6 +31,14 @@ export function TableDate({
   onDateMouseLeave,
 }: TableDateProps) {
   const prefixClass = usePrefixClass();
+  /**
+   * useGetWeeik 获取的是在 Picker 注入的函数
+   * props.formatter?.getWeek || getWeek
+   * getWeek 从 date-format-parse 导出的函数
+   *
+   * 获取今天已经过去了多少个周
+   * TODO
+   */
   const getWeekNumber = useGetWeek();
   const locale = useLocale().value;
 

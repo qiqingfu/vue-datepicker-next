@@ -51,6 +51,10 @@ function PickerInput(originalProps: PickerInputProps, { slots }: SetupContext) {
     return props.separator || (props.range ? ' ~ ' : ',');
   });
 
+  /**
+   * 检测一组日期是否为有效值
+   * disabledDate 禁止选择的日期
+   */
   const isValidValue = (value: unknown) => {
     if (props.range) {
       return isValidRangeDate(value) && value.every((date) => !props.disabledDate(date));

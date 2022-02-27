@@ -11,6 +11,9 @@ export function isValidDate(date: unknown): date is Date {
   return date instanceof Date && !isNaN(date.getTime());
 }
 
+/**
+ * 有效的范围日期
+ */
 export function isValidRangeDate(dates: unknown): dates is [Date, Date] {
   return (
     Array.isArray(dates) && dates.length === 2 && dates.every(isValidDate) && dates[0] <= dates[1]
@@ -35,6 +38,10 @@ export function getValidDate(...values: Array<number | string | Date | undefined
   return new Date();
 }
 
+/**
+ * 一个日期的开始年，年份开始的第一个第一日
+ * xxxx-01-01 00:00:00
+ */
 export function startOfYear(value: Date) {
   const date = new Date(value);
   date.setMonth(0, 1);
@@ -42,6 +49,9 @@ export function startOfYear(value: Date) {
   return date;
 }
 
+/**
+ * 一个日期的开始月，月份开始的第一天
+ */
 export function startOfMonth(value: Date) {
   const date = new Date(value);
   date.setDate(1);
@@ -49,6 +59,10 @@ export function startOfMonth(value: Date) {
   return date;
 }
 
+/**
+ * xxxx-xx-xx 00:00:00
+ * 一天的开始
+ */
 export function startOfDay(value: Date) {
   const date = new Date(value);
   date.setHours(0, 0, 0, 0);

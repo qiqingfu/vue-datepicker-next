@@ -58,11 +58,19 @@ export function getRelativePosition(
   return { left: `${left}px`, top: `${top}px` };
 }
 
+/**
+ * 从指定DOM元素一直向上级查找
+ * 直到找到具有 overflow: auto 和 overflow: scroll 的父元素
+ */
 export function getScrollParent(node: Element | null, until = document.body): Element | null {
   if (!node || node === until) {
     return null;
   }
 
+  /**
+   * getComputedStyle 获取元素计算后的CSS样式属性对象
+   * getPropertyValue 查询的 CSS 属性名
+   */
   const style = (value: Element, prop: string) =>
     getComputedStyle(value, null).getPropertyValue(prop);
 

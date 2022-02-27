@@ -35,6 +35,10 @@ export interface CalendarProps {
   ['onUpdate:value']?: (v: any, type: string) => void;
 }
 
+/**
+ * type：date
+ * range：false
+ */
 function Calendar(originalProps: CalendarProps) {
   const props = withDefault(originalProps, {
     defaultValue: startOfDay(new Date()),
@@ -44,6 +48,10 @@ function Calendar(originalProps: CalendarProps) {
     titleFormat: 'YYYY-MM-DD',
   });
 
+  /**
+   * 计算 props.value 和 props.type
+   * 计算 年、月、日的开始日期
+   */
   const innerValue = computed(() => {
     const value = Array.isArray(props.value) ? props.value : [props.value];
     return value.filter(isValidDate).map((v) => {

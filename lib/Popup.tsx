@@ -19,6 +19,9 @@ export interface PopupProps {
   getRelativeElement: () => HTMLElement | undefined;
 }
 
+/**
+ * 弹出层组件
+ */
 function Popup(originalProps: PopupProps, { slots }: SetupContext) {
   const props = withDefault(originalProps, {
     appendToBody: true,
@@ -35,16 +38,31 @@ function Popup(originalProps: PopupProps, { slots }: SetupContext) {
     position.value = getRelativePosition(relativeElement, width, height, props.appendToBody);
   };
 
+  /**
+   * flush：post 在组件更新后触发，这样你就可以访问更新的DOM
+   * Vue3.2.0 提供更具语义化的watchPostEffect函数
+   */
   watchEffect(displayPopup, { flush: 'post' });
 
   watchEffect(
     (onInvalidate) => {
+      /**
+       * 父级DOM元素
+       */
       const relativeElement = props.getRelativeElement();
       if (!relativeElement) return;
       const scrollElement = getScrollParent(relativeElement) || window;
       const handleMove = rafThrottle(displayPopup);
       scrollElement.addEventListener('scroll', handleMove);
+      /**
+       * 浏览器窗口发生变化，displayPopup 函数执行重新计算位置
+       */
       window.addEventListener('resize', handleMove);
+      /**
+       * 清除副作用 onInvalidate 函数
+       *  1. 副作用即将重新执行时
+       *  2. 侦听器被停止（如果在 setup() 或生命周期钩子函数中使用了 watchEffect，则在组件卸载时）
+       */
       onInvalidate(() => {
         scrollElement.removeEventListener('scroll', handleMove);
         window.removeEventListener('resize', handleMove);

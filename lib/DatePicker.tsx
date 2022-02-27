@@ -61,6 +61,9 @@ function DatePicker(originalProps: DatePickerComponentProps, { slots }: SetupCon
 
   return (
     <Picker {...pick(props, Picker.props)}>
+      {/* Picker组件的content命名插槽时日期的核心实现 
+        各类日期的核心实现与 Picker 组件低耦合
+      */}
       {{
         content: (slotProps: SlotProps) => {
           if (props.range) {

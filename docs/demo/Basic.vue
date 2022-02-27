@@ -4,10 +4,7 @@
       <p>date (default)</p>
       <date-picker
         v-model:value="value1"
-        format="YYYY-MM-DD"
         type="date"
-        range
-        separator="-"
         placeholder="Select date"
         :on-input-error="onInputError"
       ></date-picker>

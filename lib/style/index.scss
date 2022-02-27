@@ -108,6 +108,7 @@
   z-index: $popup-z-index;
 }
 
+// 侧边栏和时间选择区是浮动布局关系
 .#{$namespace}-datepicker-sidebar {
   float: left;
   box-sizing: border-box;
