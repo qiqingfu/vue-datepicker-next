@@ -5,6 +5,7 @@
       <date-picker
         v-model:value="value1"
         type="date"
+        show-week-number
         placeholder="Select date"
         :on-input-error="onInputError"
       ></date-picker>

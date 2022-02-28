@@ -64,6 +64,10 @@ function Picker(originalProps: PickerProps, { slots }: SetupContext) {
 
   providePrefixClass(props.prefixClass);
   provideGetWeek(props.formatter?.getWeek || getWeek);
+  /**
+   * lang：object | string
+   * 如果为对象，则自定义语言配置
+   */
   const locale = provideLocale(toRef(originalProps, 'lang'));
 
   /**

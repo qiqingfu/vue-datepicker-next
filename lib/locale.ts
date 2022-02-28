@@ -23,6 +23,7 @@ export function locale(name?: string, object?: Locale | null, isLocal = false): 
 
 /**
  * get locale object
+ * 获取本地语言对象
  * @param {string} name lang
  */
 export function getLocale(name?: string) {

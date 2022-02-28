@@ -69,6 +69,9 @@ export function startOfDay(value: Date) {
   return date;
 }
 
+/**
+ * 获取日历
+ */
 export function getCalendar({
   firstDayOfWeek,
   year,
@@ -81,6 +84,9 @@ export function getCalendar({
   const arr = [];
   // change to the last day of the last month
   const calendar = createDate(year, month, 0);
+  /**
+   * 上个月的最后一天
+   */
   const lastDayInLastMonth = calendar.getDate();
   // getDay() 0 is Sunday, 1 is Monday
   const firstDayInLastMonth = lastDayInLastMonth - ((calendar.getDay() + 7 - firstDayOfWeek) % 7);

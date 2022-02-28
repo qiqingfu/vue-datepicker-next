@@ -2,10 +2,12 @@ import { PlainObject } from '../type';
 
 /**
  * chunk the array
+ * 将一个数组，按 size 个为一组进行拆分
  * @param {Array} arr
  * @param {Number} size
  */
 export function chunk<T>(arr: T[], size: number) {
+  // eslint-disable-next-line no-debugger
   if (!Array.isArray(arr)) {
     return [];
   }

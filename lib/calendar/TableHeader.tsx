@@ -14,23 +14,41 @@ export function TableHeader(
 ) {
   const prefixClass = usePrefixClass();
 
+  /**
+   * 上一月
+   */
   const lastMonth = () => {
     onUpdateCalendar(setMonth(calendar, (v) => v - 1));
   };
+  /**
+   * 下一月
+   */
   const nextMonth = () => {
     onUpdateCalendar(setMonth(calendar, (v) => v + 1));
   };
+  /**
+   * 上一年
+   */
   const lastYear = () => {
     onUpdateCalendar(setYear(calendar, (v) => v - 1));
   };
+  /**
+   * 下一年
+   */
   const nextYear = () => {
     onUpdateCalendar(setYear(calendar, (v) => v + 1));
   };
 
+  /**
+   * 过去十年
+   */
   const lastDecade = () => {
     onUpdateCalendar(setYear(calendar, (v) => v - 10));
   };
 
+  /**
+   * 下一个十年
+   */
   const nextDecade = () => {
     onUpdateCalendar(setYear(calendar, (v) => v + 10));
   };

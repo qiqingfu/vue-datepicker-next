@@ -37,26 +37,44 @@ export function TableDate({
    * getWeek 从 date-format-parse 导出的函数
    *
    * 获取今天已经过去了多少个周
-   * TODO
    */
   const getWeekNumber = useGetWeek();
   const locale = useLocale().value;
 
+  /**
+   * 语言配置信息，默认为英文
+   */
   const { yearFormat, monthBeforeYear, monthFormat = 'MMM', formatLocale } = locale;
 
+  /**
+   * 一周的第一天
+   */
   const firstDayOfWeek = formatLocale.firstDayOfWeek || 0;
   let days = locale.days || formatLocale.weekdaysMin;
+  /**
+   * 根据设置的 firstDayOfWeek，计算出一周从星期几开始
+   */
   days = days.concat(days).slice(firstDayOfWeek, firstDayOfWeek + 7);
 
   const year = calendar.getFullYear();
   const month = calendar.getMonth();
 
+  /**
+   * getCalendar 根据年、月和周的第几天，生成当月的日历数据
+   * 通过 chunk 将日历数组拆分为 6 组
+   */
   const dates = chunk(getCalendar({ firstDayOfWeek, year, month }), 7);
 
+  /**
+   * 格式化日期
+   */
   const formatDate = (date: Date, fmt: string) => {
     return format(date, fmt, { locale: locale.formatLocale });
   };
 
+  /**
+   * 切换年或月
+   */
   const handlePanelChange = (panel: 'year' | 'month') => {
     onUpdatePanel(panel);
   };
@@ -113,7 +131,9 @@ export function TableDate({
         { [`${prefixClass}-calendar-week-mode`]: isWeekMode },
       ]}
     >
+      {/* 日历头部 */}
       <TableHeader type="date" calendar={calendar} onUpdateCalendar={onUpdateCalendar}>
+        {/* 应用默认插槽*/}
         {monthBeforeYear ? [monthLabel, yearLabel] : [yearLabel, monthLabel]}
       </TableHeader>
       <div class={`${prefixClass}-calendar-content`}>
@@ -135,6 +155,7 @@ export function TableDate({
                   { [`${prefixClass}-active-week`]: getWeekActive(row) },
                 ]}
               >
+                {/* 显示星期数字，当前月份和日属于当前年的第几周 */}
                 {showWeekNumber && (
                   <td
                     class={`${prefixClass}-week-number`}

@@ -183,6 +183,9 @@ function Calendar(originalProps: CalendarProps) {
     });
   };
 
+  /**
+   * 当 ref 的值发生变化时，该函数会重新 render
+   */
   return () => {
     if (panel.value === 'year') {
       return (
