@@ -61,6 +61,9 @@ function Calendar(originalProps: CalendarProps) {
     });
   });
 
+  /**
+   * 内部日程表
+   */
   const innerCalendar = ref<Date>(new Date());
   watchEffect(() => {
     let calendarDate = props.calendar;
@@ -83,17 +86,29 @@ function Calendar(originalProps: CalendarProps) {
     panel.value = index !== -1 ? (panels[index] as PanelType) : 'date';
   });
 
+  /**
+   * 切换面板
+   */
   const handelPanelChange = (value: PanelType) => {
     const oldPanel = panel.value;
     panel.value = value;
     props.onPanelChange?.(value, oldPanel);
   };
 
+  /**
+   * 禁止选择的日期
+   */
   const isDisabled = (date: Date) => {
+    /**
+     * 通过 new Date(date) 可以复制一份日期
+     */
     return props.disabledDate(new Date(date), innerValue.value);
   };
 
   const emitDate = (date: Date, type: string) => {
+    /**
+     * 如果年被禁用了，点击无效
+     */
     if (!isDisabled(date)) {
       props.onPick?.(date);
       if (props.multiple === true) {
@@ -112,12 +127,20 @@ function Calendar(originalProps: CalendarProps) {
     emitDate(date, props.type === 'week' ? 'week' : 'date');
   };
 
+  /**
+   * 面板 panel 为 year
+   * 选中某一样触发的事件函数
+   */
   const handleSelectYear = (date: Date) => {
     if (props.type === 'year') {
       emitDate(date, 'year');
     } else {
+      // 如果为面板切换，选择年之后切换为 month 月面板
       handleCalendarChange(date);
       handelPanelChange('month');
+      /**
+       * 部分更新，这里只是单独使用年面板的时候
+       */
       if (props.partialUpdate && innerValue.value.length === 1) {
         const value = setYear(innerValue.value[0], date.getFullYear());
         emitDate(value, 'year');
@@ -129,7 +152,13 @@ function Calendar(originalProps: CalendarProps) {
     if (props.type === 'month') {
       emitDate(date, 'month');
     } else {
+      /**
+       * 月份更新，将 Y-M-xxxx 最新值同步给内部日历
+       */
       handleCalendarChange(date);
+      /**
+       * 切换到选择日面板
+       */
       handelPanelChange('date');
       if (props.partialUpdate && innerValue.value.length === 1) {
         const value = setMonth(setYear(innerValue.value[0], date.getFullYear()), date.getMonth());
@@ -138,7 +167,14 @@ function Calendar(originalProps: CalendarProps) {
     }
   };
 
+  /**
+   * 根据当前 cell 日期，计算出它的 class
+   */
   const getCellClasses = (cellDate: Date, classes: string[] = []) => {
+    /**
+     * 内部调用外部的回调函数，将必要的值传递出去，根据回调函数的返回值
+     * 决定当前日期是否禁用
+     */
     if (isDisabled(cellDate)) {
       classes.push('disabled');
     } else if (innerValue.value.some((v) => v.getTime() === cellDate.getTime())) {
@@ -148,11 +184,17 @@ function Calendar(originalProps: CalendarProps) {
   };
 
   const getDateClasses = (cellDate: Date) => {
+    /**
+     * 是否为当前月
+     */
     const notCurrentMonth = cellDate.getMonth() !== innerCalendar.value.getMonth();
     const classes = [];
     if (cellDate.getTime() === new Date().setHours(0, 0, 0, 0)) {
       classes.push('today');
     }
+    /**
+     * 非当前月的日期，添加 not-current-month 类
+     */
     if (notCurrentMonth) {
       classes.push('not-current-month');
     }
@@ -166,7 +208,14 @@ function Calendar(originalProps: CalendarProps) {
     return getCellClasses(cellDate);
   };
 
+  /**
+   * TableYear，当前年的样式
+   */
   const getYearClasses = (cellDate: Date) => {
+    /**
+     * 如果日期选择类型不为 year，说明是从其他类型切换到 year 面板的
+     * innterCalendar的年与 TableYear 每一个 cell 相等，则添加 active 选中样式
+     */
     if (props.type !== 'year') {
       return innerCalendar.value.getFullYear() === cellDate.getFullYear() ? 'active' : '';
     }

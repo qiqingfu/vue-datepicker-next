@@ -81,16 +81,25 @@ export function TableDate({
 
   const getCellDate = (el: HTMLElement) => {
     const index = el.getAttribute('data-index')!;
+    /**
+     * 获取 row 行，col 列
+     */
     const [row, col] = index.split(',').map((v) => parseInt(v, 10));
     const value = dates[row][col];
     return new Date(value);
   };
 
+  /**
+   * 当日历被点击时
+   */
   const handleCellClick = (evt: MouseEvent) => {
     onSelect(getCellDate(evt.currentTarget as HTMLElement));
   };
 
   const handleMouseEnter = (evt: MouseEvent) => {
+    /**
+     * 传递给 TableDate 的props.onDateMouseEnter 函数
+     */
     if (onDateMouseEnter) {
       onDateMouseEnter(getCellDate(evt.currentTarget as HTMLElement));
     }
@@ -155,7 +164,7 @@ export function TableDate({
                   { [`${prefixClass}-active-week`]: getWeekActive(row) },
                 ]}
               >
-                {/* 显示星期数字，当前月份和日属于当前年的第几周 */}
+                {/* 显示周，当前月份和日属于当前年的第几周 */}
                 {showWeekNumber && (
                   <td
                     class={`${prefixClass}-week-number`}

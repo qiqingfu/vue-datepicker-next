@@ -27,6 +27,7 @@ export function TableYear({
   const prefixClass = usePrefixClass();
 
   const getDate = (year: number) => {
+    // createDate(year, 0) 选择年之后，月份初始化为1月
     return createDate(year, 0);
   };
 
@@ -36,6 +37,10 @@ export function TableYear({
     onSelect(getDate(parseInt(year, 10)));
   };
 
+  /**
+   * 假如当前为 2022 年，算出 2020 - 2030 十年
+   * 分为两组
+   */
   const years = getYearPanel(new Date(calendar));
   const firstYear = years[0][0];
   const lastYear = last(last(years));

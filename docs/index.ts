@@ -10,6 +10,6 @@ import 'highlight.js/styles/atom-one-light.css';
 const app = createApp(App);
 
 DatePicker.install(app);
-DatePicker.locale('en');
+DatePicker.locale('zh');
 
 app.mount('#app');

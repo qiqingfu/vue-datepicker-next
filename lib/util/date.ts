@@ -1,4 +1,7 @@
 // new Date(10, 0, 1) The year from 0 to 99 will be incremented by 1900 automatically.
+/**
+ * 根据年、月、日 初始化日期
+ */
 export function createDate(y: number, M = 0, d = 1, h = 0, m = 0, s = 0, ms = 0) {
   const date = new Date(y, M, d, h, m, s, ms);
   if (y < 100 && y >= 0) {
@@ -89,18 +92,26 @@ export function getCalendar({
    */
   const lastDayInLastMonth = calendar.getDate();
   // getDay() 0 is Sunday, 1 is Monday
+  // calendar.getDay() 上个月的最后一天是星期几
   const firstDayInLastMonth = lastDayInLastMonth - ((calendar.getDay() + 7 - firstDayOfWeek) % 7);
   for (let i = firstDayInLastMonth; i <= lastDayInLastMonth; i++) {
     arr.push(createDate(year, month, i - lastDayInLastMonth));
   }
   // change to the last day of the current month
+  // 获取当前月的最后一天
   calendar.setMonth(month + 1, 0);
   const lastDayInCurrentMonth = calendar.getDate();
   for (let i = 1; i <= lastDayInCurrentMonth; i++) {
     arr.push(createDate(year, month, i));
   }
 
+  /**
+   * 生成的 date 数据中，有多少上个月的数据
+   */
   const lastMonthLength = lastDayInLastMonth - firstDayInLastMonth + 1;
+  /**
+   * 生成的 date 数据中，下个月应有多少条
+   */
   const nextMonthLength = 6 * 7 - lastMonthLength - lastDayInCurrentMonth;
   for (let i = 1; i <= nextMonthLength; i++) {
     arr.push(createDate(year, month, lastDayInCurrentMonth + i));
@@ -118,6 +129,9 @@ export function setMonth(dirtyDate: Date, dirtyMonth: number | ((v: number) => n
   return date;
 }
 
+/**
+ * 设置年
+ */
 export function setYear(dirtyDate: Date, dirtyYear: number | ((v: number) => number)) {
   const date = new Date(dirtyDate);
   const year = typeof dirtyYear === 'function' ? dirtyYear(date.getFullYear()) : dirtyYear;
